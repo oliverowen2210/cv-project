@@ -1,8 +1,11 @@
 import React from "react";
 import uniqid from "uniqid";
 
+import "../styles/GeneralInfo.css";
 import { updateInputs, updateValue } from "../utils";
 import TextField from "./TextField";
+import EditButton from "./EditButton";
+import EditableLabel from "./EditableLabel";
 
 export default class GeneralInfo extends React.Component {
   constructor(props) {
@@ -52,7 +55,11 @@ export default class GeneralInfo extends React.Component {
     return (
       <form className="generalInfo">
         <div className="inputGroup nameInput">
-          {this.state.editing ? <label htmlFor={name.id}>Name: </label> : <></>}
+          <EditableLabel
+            editing={this.state.editing}
+            htmlFor={name.id}
+            edit="Name: "
+          />
           <TextField
             class="name"
             value={name.inputValue}
@@ -62,11 +69,12 @@ export default class GeneralInfo extends React.Component {
           ></TextField>
         </div>
         <div className="inputGroup addressInput">
-          {this.state.editing ? (
-            <label htmlFor={address.id}>Address</label>
-          ) : (
-            <span>🏠</span>
-          )}
+          <EditableLabel
+            editing={this.state.editing}
+            htmlFor={address.id}
+            edit="Address"
+            noEdit="🏠"
+          />
           <TextField
             class="address"
             value={address.inputValue}
@@ -76,11 +84,12 @@ export default class GeneralInfo extends React.Component {
           ></TextField>
         </div>
         <div className="inputGroup emailInput">
-          {this.state.editing ? (
-            <label htmlFor={email.id}>Email</label>
-          ) : (
-            <span>📧</span>
-          )}
+          <EditableLabel
+            editing={this.state.editing}
+            htmlFor={email.id}
+            edit="Email"
+            noEdit="📧"
+          />
           <TextField
             class="email"
             value={email.inputValue}
@@ -90,11 +99,12 @@ export default class GeneralInfo extends React.Component {
           ></TextField>
         </div>
         <div className="inputGroup phoneInput">
-          {this.state.editing ? (
-            <label htmlFor={phone.id}>Phone Number</label>
-          ) : (
-            <span>📞</span>
-          )}
+          <EditableLabel
+            editing={this.state.editing}
+            htmlFor={phone.id}
+            edit="Phone Number"
+            noEdit="📞"
+          />
           <TextField
             class="phone"
             value={phone.inputValue}
@@ -103,25 +113,11 @@ export default class GeneralInfo extends React.Component {
             updateFunc={this.updateValue}
           ></TextField>
         </div>
-        {this.state.editing ? (
-          <button
-            className="submitButton"
-            onClick={(e) => {
-              this.submitButtonHandling(e);
-            }}
-          >
-            ✓
-          </button>
-        ) : (
-          <button
-            className="editButton"
-            onClick={(e) => {
-              this.editButtonHandling(e);
-            }}
-          >
-            ✎
-          </button>
-        )}
+        <EditButton
+          editing={this.state.editing}
+          editFunc={this.editButtonHandling}
+          submitFunc={this.submitButtonHandling}
+        />
       </form>
     );
   }
