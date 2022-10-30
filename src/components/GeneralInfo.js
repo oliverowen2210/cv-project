@@ -2,7 +2,7 @@ import React from "react";
 import uniqid from "uniqid";
 
 import "../styles/GeneralInfo.css";
-import { updateInputs, updateValue } from "../utils";
+import { updateInputs, updateValue, toggleInputValidity } from "../utils";
 import TextField from "./TextField";
 import EditButton from "./EditButton";
 import EditableLabel from "./EditableLabel";
@@ -17,26 +17,35 @@ export default class GeneralInfo extends React.Component {
           value: "",
           inputValue: "",
           id: uniqid(),
+          valid: true,
+          required: true,
         },
         address: {
           value: "",
           inputValue: "",
           id: uniqid(),
+          valid: true,
+          required: true,
         },
         email: {
           value: "",
           inputValue: "",
           id: uniqid(),
+          valid: true,
+          required: true,
         },
         phone: {
           value: "",
           inputValue: "",
           id: uniqid(),
+          valid: true,
+          required: true,
         },
       },
     };
     this.updateInputs = updateInputs.bind(this);
     this.updateValue = updateValue.bind(this);
+    this.toggleInputValidity = toggleInputValidity.bind(this);
   }
 
   submitButtonHandling = (e) => {
@@ -66,6 +75,7 @@ export default class GeneralInfo extends React.Component {
             id={name.id}
             beingEdited={this.state.editing}
             updateFunc={this.updateValue}
+            toggleValidity={this.toggleInputValidity}
           ></TextField>
         </div>
         <div className="inputGroup addressInput">
@@ -81,6 +91,7 @@ export default class GeneralInfo extends React.Component {
             id={address.id}
             beingEdited={this.state.editing}
             updateFunc={this.updateValue}
+            toggleValidity={this.toggleInputValidity}
           ></TextField>
         </div>
         <div className="inputGroup emailInput">
@@ -96,6 +107,7 @@ export default class GeneralInfo extends React.Component {
             id={email.id}
             beingEdited={this.state.editing}
             updateFunc={this.updateValue}
+            toggleValidity={this.toggleInputValidity}
           ></TextField>
         </div>
         <div className="inputGroup phoneInput">
@@ -111,6 +123,7 @@ export default class GeneralInfo extends React.Component {
             id={phone.id}
             beingEdited={this.state.editing}
             updateFunc={this.updateValue}
+            toggleValidity={this.toggleInputValidity}
           ></TextField>
         </div>
         <EditButton
