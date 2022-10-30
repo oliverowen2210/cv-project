@@ -38,12 +38,15 @@ export default class InputField extends React.Component {
           id={this.props.id}
           className={this.props.class}
           onChange={(e) => {
-            this.props.updateFunc(e, this.props.id);
+            this.props.loop(
+              (input, value) => {
+                input.inputValue = value;
+              },
+              e.target.value,
+              this.props.id
+            );
           }}
           value={this.props.value}
-          onBlur={(e) => {
-            this.validate(e.target.value);
-          }}
         />
       );
     else
