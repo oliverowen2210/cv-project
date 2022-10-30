@@ -1,0 +1,64 @@
+.generalInfo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  justify-self: center;
+  background-color: rgb(2, 185, 247);
+  color: white;
+}
+
+.generalInfo {
+  display: grid;
+  grid-template-rows: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.nameInput {
+  grid-row: 1;
+  grid-column: 2;
+}
+
+.nameInput span {
+  font-size: 4rem;
+  font-weight: bold;
+}
+
+.addressInput,
+.phoneInput,
+.emailInput {
+  grid-row: 2;
+}
+
+.generalInfo label {
+  width: fit-content;
+}
+
+.generalInfo input {
+  width: 90%;
+  padding: 2%;
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
+.submitButton,
+.editButton {
+  position: absolute;
+  top: 0;
+  right: 5%;
+  color: white;
+  background: none;
+  border: none;
+  font-size: 2em;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.generalInfo div {
+  display: flex;
+  align-items: center;
+}
