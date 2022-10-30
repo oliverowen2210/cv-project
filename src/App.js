@@ -1,98 +1,100 @@
-import GeneralInfo from "./components/GeneralInfo";
-import EducationInfo from "./components/EducationInfo";
+import { useState } from "react";
+
+import Info from "./components/Info";
 import uniqid from "uniqid";
 
+import "./App.css";
+
 function App() {
-  function updateInputs() {
-    let inputs = { ...this.state.inputs };
-    Object.values(inputs).forEach((input) => {
-      input.value = input.inputValue;
-    });
-    this.setState({ inputs: inputs });
-  }
+  const [inputs, setInputs] = useState({
+    generalInputs: [
+      {
+        name: "name",
+        value: "",
+        inputValue: "",
+        id: uniqid(),
+        edit: "Name: ",
+        valid: true,
+        required: true,
+      },
+      {
+        name: "address",
+        value: "",
+        inputValue: "",
+        id: uniqid(),
+        edit: "Address",
+        noEdit: "🏠",
+        valid: true,
+        required: true,
+      },
+      {
+        name: "email",
+        value: "",
+        inputValue: "",
+        id: uniqid(),
+        edit: "Email",
+        noEdit: "📧",
+        valid: true,
+        required: true,
+      },
+      {
+        name: "phone",
+        value: "",
+        inputValue: "",
+        id: uniqid(),
+        edit: "Phone Number",
+        noEdit: "📞",
+        valid: true,
+        required: true,
+      },
+    ],
+    educationInputs: [
+      {
+        name: "degree",
+        value: "",
+        inputValue: "",
+        id: uniqid(),
+      },
+      {
+        name: "school",
+        value: "",
+        inputValue: "",
+        id: uniqid(),
+      },
+      {
+        name: "minors",
+        value: "",
+        inputValue: "",
+        id: uniqid(),
+      },
+      {
+        name: "gradDate",
+        value: "",
+        inputValue: "",
+        id: uniqid(),
+      },
+    ],
+  });
 
-  function updateValue(e, id) {
-    let inputs = { ...this.state.inputs };
-    Object.values(inputs).some((input) => {
-      if (input.id === id) {
-        input.inputValue = e.target.value;
-        this.setState({ inputs: inputs });
-        return true;
+  function loopThroughInputs(func, value = null, id = null) {
+    let inputGroups = { ...inputs };
+    for (let inputGroup in inputGroups) {
+      for (let input of inputGroups[inputGroup]) {
+        if (id && input.id === id) {
+          func(input, value);
+          setInputs(inputGroups);
+          return true;
+        } else if (!id) func(input, value);
       }
-      return false;
-    });
+    }
+    setInputs(inputGroups);
+    return true;
   }
 
-  function toggleInputValidity(id, newState) {
-    let inputs = { ...this.state.inputs };
-    Object.values(inputs).some((input) => {
-      if (input.id === id) {
-        input.valid = newState;
-        this.setState({ inputs: inputs });
-        return true;
-      }
-      return false;
-    });
-  }
-
-  const inputs = {
-    generalInputs: {
-      name: {
-        value: "",
-        inputValue: "",
-        id: uniqid(),
-        valid: true,
-        required: true,
-      },
-      address: {
-        value: "",
-        inputValue: "",
-        id: uniqid(),
-        valid: true,
-        required: true,
-      },
-      email: {
-        value: "",
-        inputValue: "",
-        id: uniqid(),
-        valid: true,
-        required: true,
-      },
-      phone: {
-        value: "",
-        inputValue: "",
-        id: uniqid(),
-        valid: true,
-        required: true,
-      },
-    },
-    educationInputs: {
-      degree: {
-        value: "",
-        inputValue: "",
-        id: uniqid(),
-      },
-      school: {
-        value: "",
-        inputValue: "",
-        id: uniqid(),
-      },
-      minors: {
-        value: "",
-        inputValue: "",
-        id: uniqid(),
-      },
-      gradDate: {
-        value: "",
-        inputValue: "",
-        id: uniqid(),
-      },
-    },
-  };
   return (
     <div className="App">
-      <GeneralInfo></GeneralInfo>
-      <EducationInfo></EducationInfo>
+      <Info inputs={inputs.generalInputs} loop={loopThroughInputs} />
+      <Info inputs={inputs.educationInputs} loop={loopThroughInputs} />
     </div>
   );
 }
