@@ -83,7 +83,7 @@ body {
 .generalInfo .editButton {
   position: absolute;
   top: 0;
-  right: 0;
+  right: 4.5%;
   color: white;
   background: none;
   border: none;
@@ -97,8 +97,25 @@ body {
   position: relative;
 }
 
+input {
+  border: 2px solid black;
+  border-radius: 0.5em;
+}
+
+input:focus {
+  outline: 2px solid black;
+}
+
 input.invalid {
-  border: 3px solid red;
+  border: 2px solid red;
+}
+
+input.invalid:focus {
+  outline: 2px solid red;
+}
+
+input:focus {
+  outline: none;
 }
 
 .generalInfo div {
@@ -112,6 +129,10 @@ input.invalid {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.educationInfoWrapper h2 {
+  margin: 3% 0;
 }
 
 .educationInfo {
@@ -144,7 +165,6 @@ input.invalid {
 
 .educationInfo input {
   font-size: 1.2rem;
-  padding: 1%;
 }
 
 .schoolInput {
@@ -168,5 +188,20 @@ input.invalid {
 }
 
 .infoGroup {
-  height: 100%;
+  height: fit-content;
+  width: 80%;
+}
+
+.newEducationInfoButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 5rem;
+  align-self: flex-end;
+  position: relative;
+  right: 10%;
+}
+
+.educationInfo .inputGroup span {
+  text-align: center;
 }
