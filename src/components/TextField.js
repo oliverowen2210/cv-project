@@ -6,52 +6,28 @@ export default class InputField extends React.Component {
     this.state = {};
   }
 
-  validateLength(input) {
-    if (this.props.minLength && input.length < this.props.minLength) {
-      return false;
-    } else if (this.props.maxLength && input.length > this.props.maxLength) {
-      return false;
-    }
-    return true;
-  }
-
-  validatePattern(input) {
-    if (this.props.pattern) {
-      const pattern = new RegExp(this.props.pattern);
-      return pattern.test(input);
-    }
-    return true;
-  }
-
-  validate = (input) => {
-    if (!this.validateLength(input) || !this.validatePattern(input)) {
-      return this.props.toggleValidity(this.props.id, false);
-    }
-    return this.props.toggleValidity(this.props.id, true);
-  };
-
   render() {
     let returnedElement = null;
+    const input = this.props.input;
     if (this.props.beingEdited)
       returnedElement = (
         <input
-          id={this.props.id}
-          className={this.props.class}
+          value={input.inputValue}
+          id={input.id}
+          className={!input.valid ? `${input.name} invalid` : input.name}
           onChange={(e) => {
-            this.props.loop(
-              (input, value) => {
-                input.inputValue = value;
-              },
-              e.target.value,
-              this.props.id
-            );
+            this.props.update(input.id, e.target.value);
           }}
-          value={this.props.value}
+          onBlur={(e) => {
+            this.props.validate(input, e.target.value);
+          }}
         />
       );
     else
       returnedElement = (
-        <span className={this.props.class}>{this.props.value}</span>
+        <span className={!input.valid ? `${input.name} invalid` : input.name}>
+          {input.value}
+        </span>
       );
     return returnedElement;
   }
