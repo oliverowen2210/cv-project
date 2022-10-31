@@ -1,9 +1,18 @@
 import { useState } from "react";
-
-import Info from "./components/Info";
 import uniqid from "uniqid";
 
+import Info from "./components/Info";
+import NewInfoButton from "./components/NewInfoButton";
+
 function App() {
+  let [educationInfos, setEducationInfos] = useState([
+    <Info
+      inputs={getInputs("education")}
+      class="educationInfo"
+      key={uniqid()}
+    />,
+  ]);
+  let [workInfos, setWorkInfos] = useState([]);
   function getInputs(type) {
     if (type === "general") {
       return [
@@ -15,7 +24,6 @@ function App() {
           edit: "Name",
           valid: true,
           required: true,
-          minLength: 4,
         },
         {
           name: "address",
@@ -84,14 +92,7 @@ function App() {
 
   return (
     <div className="App">
-      <Info
-        inputs={inputs.generalInputs}
-        loop={loopThroughInputs}
-        class="generalInfo"
-        allInputsValid={checkValidity(inputs.generalInputs)}
-        update={updateInputValue}
-        toggle={toggleValidity}
-      />
+      <Info inputs={getInputs("general")} class="generalInfo" key={uniqid()} />
       <div className="workInfoWrapper">
         {/**button that lets you add new Infos with startdate, enddate,
          * title and company inputs. startdate and enddate could be linked
@@ -99,24 +100,15 @@ function App() {
       </div>
       <div className="educationInfoWrapper">
         <h2>Education</h2>
-        <div className="infoGroup">
-          <Info
-            inputs={[...inputs.educationInputs]}
-            loop={loopThroughInputs}
-            class="educationInfo"
-            allInputsValid={checkValidity(inputs.educationInputs)}
-            update={updateInputValue}
-            toggle={toggleValidity}
-          />
-          <Info
-            inputs={[...inputs.educationInputs]}
-            loop={loopThroughInputs}
-            class="educationInfo"
-            allInputsValid={checkValidity(inputs.educationInputs)}
-            update={updateInputValue}
-            toggle={toggleValidity}
-          />
-        </div>
+        <div className="infoGroup">{educationInfos}</div>
+        <NewInfoButton
+          infoArray={educationInfos}
+          setFunc={setEducationInfos}
+          infoInputs={getInputs("education")}
+          infoClass="educationInfo"
+          className="newEducationInfoButton"
+          limit={2}
+        />
       </div>
     </div>
   );
