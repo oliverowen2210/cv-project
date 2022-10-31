@@ -12,31 +12,80 @@ export default class Info extends React.Component {
   }
 
   getInputHTML() {
-    return this.props.inputs.map((input) => (
-      <div
-        className={`inputGroup ${input.name}Input`}
-        key={`${input.id} wrapper`}
-      >
-        <EditableLabel
-          //* this is because useState is async, so checking for
-          /* validity status after submitting doesn't work. will revisit once
+    return this.props.inputs.map((input) => {
+      if (!input.value && !this.state.editing) return null;
+      else
+        return (
+          <div
+            className={`inputGroup ${input.name}Input`}
+            key={`${input.id} wrapper`}
+          >
+            <EditableLabel
+              //* this is because useState is async, so checking for
+              /* validity status after submitting doesn't work. will revisit once
         i learn how to use hooks*/
-          beingEdited={this.props.allInputsValid ? this.state.editing : true}
-          htmlFor={input.id}
-          edit={input.edit}
-          noEdit={input.noEdit}
-          key={`${input.id} label`}
-          required={input.required}
-        />
-        <TextField
-          input={input}
-          beingEdited={this.props.allInputsValid ? this.state.editing : true}
-          update={this.props.update}
-          validate={this.validate}
-          key={`${input.id} field`}
-        ></TextField>
-      </div>
-    ));
+              beingEdited={
+                this.props.allInputsValid ? this.state.editing : true
+              }
+              htmlFor={input.id}
+              edit={input.edit}
+              noEdit={input.noEdit}
+              key={`${input.id} label`}
+              required={input.required}
+            />
+            <TextField
+              input={input}
+              beingEdited={
+                this.props.allInputsValid ? this.state.editing : true
+              }
+              update={this.props.update}
+              validate={this.validate}
+              key={`${input.id} field`}
+            ></TextField>
+          </div>
+        );
+    });
+  }
+
+  function updateInputValue(id, newValue) {
+    loopThroughInputs(
+      (input, newVal) => {
+        input.inputValue = newVal;
+      },
+      newValue,
+      id
+    );
+  }
+
+  function toggleValidity(id, newValue) {
+    loopThroughInputs(
+      (input, newVal) => {
+        input.valid = newVal;
+      },
+      newValue,
+      id
+    );
+  }
+
+  function checkValidity(inputGroup) {
+    return !inputGroup.some((input) => {
+      return input.valid === false;
+    });
+  }
+
+  function loopThroughInputs(func, value = null, id = null) {
+    let inputGroups = { ...inputs };
+    for (let inputGroup in inputGroups) {
+      for (let input of inputGroups[inputGroup]) {
+        if (id && input.id === id) {
+          func(input, value);
+          setInputs(inputGroups);
+          return true;
+        } else if (!id) func(input, value);
+      }
+    }
+    setInputs(inputGroups);
+    return true;
   }
 
   validateRequired(input, inputValue) {
