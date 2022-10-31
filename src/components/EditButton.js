@@ -6,7 +6,7 @@ export default class EditButton extends React.Component {
     this.state = {};
   }
   render() {
-    return this.props.editing ? (
+    return this.props.beingEdited ? (
       <button
         className="submitButton"
         onClick={(e) => {
