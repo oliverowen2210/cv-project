@@ -13,6 +13,31 @@
   color: white;
 }
 
+.required:hover::before {
+  content: "This field is required.";
+  position: absolute;
+  border: 2px solid black;
+  width: fit-content;
+  border-radius: 1em;
+  padding: 1%;
+  background: white;
+  color: black;
+  font-size: 0.6em;
+}
+
+.generalInfo .required:hover::before {
+  top: -5%;
+  left: 30%;
+}
+
+.educationInfo .required:hover::before {
+  left: -65%;
+}
+
+.required::after {
+  content: "*";
+}
+
 .nameInput {
   grid-row: 1;
   grid-column: 2;
@@ -55,6 +80,11 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  position: relative;
+}
+
+input.invalid {
+  border: 3px solid red;
 }
 
 .generalInfo div {
@@ -62,12 +92,20 @@
   align-items: center;
 }
 
-.educationInfo {
-  position: relative;
+.educationInfoWrapper {
   grid-row: 2;
   grid-column: 2;
   display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.educationInfo {
+  position: relative;
+  display: flex;
   gap: 4%;
+  width: 100%;
+  height: 50%;
   align-items: center;
   flex-direction: column;
 }
