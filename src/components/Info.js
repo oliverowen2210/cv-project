@@ -8,11 +8,12 @@ export default class Info extends React.Component {
     super(props);
     this.state = {
       editing: true,
+      inputs: this.props.inputs,
     };
   }
 
   getInputHTML() {
-    return this.props.inputs.map((input) => {
+    return this.state.inputs.map((input) => {
       if (!input.value && !this.state.editing) return null;
       else
         return (
@@ -24,9 +25,7 @@ export default class Info extends React.Component {
               //* this is because useState is async, so checking for
               /* validity status after submitting doesn't work. will revisit once
         i learn how to use hooks*/
-              beingEdited={
-                this.props.allInputsValid ? this.state.editing : true
-              }
+              beingEdited={this.allInputsValid() ? this.state.editing : true}
               htmlFor={input.id}
               edit={input.edit}
               noEdit={input.noEdit}
@@ -35,10 +34,8 @@ export default class Info extends React.Component {
             />
             <TextField
               input={input}
-              beingEdited={
-                this.props.allInputsValid ? this.state.editing : true
-              }
-              update={this.props.update}
+              beingEdited={this.allInputsValid() ? this.state.editing : true}
+              update={this.updateInputValue}
               validate={this.validate}
               key={`${input.id} field`}
             ></TextField>
@@ -47,46 +44,44 @@ export default class Info extends React.Component {
     });
   }
 
-  function updateInputValue(id, newValue) {
-    loopThroughInputs(
+  updateInputValue = (id, newValue) => {
+    this.loopThroughInputs(
       (input, newVal) => {
         input.inputValue = newVal;
       },
       newValue,
       id
     );
-  }
+  };
 
-  function toggleValidity(id, newValue) {
-    loopThroughInputs(
+  toggleValidity = (id, newValue) => {
+    this.loopThroughInputs(
       (input, newVal) => {
         input.valid = newVal;
       },
       newValue,
       id
     );
-  }
+  };
 
-  function checkValidity(inputGroup) {
-    return !inputGroup.some((input) => {
+  allInputsValid = () => {
+    return !this.state.inputs.some((input) => {
       return input.valid === false;
     });
-  }
+  };
 
-  function loopThroughInputs(func, value = null, id = null) {
-    let inputGroups = { ...inputs };
-    for (let inputGroup in inputGroups) {
-      for (let input of inputGroups[inputGroup]) {
-        if (id && input.id === id) {
-          func(input, value);
-          setInputs(inputGroups);
-          return true;
-        } else if (!id) func(input, value);
-      }
+  loopThroughInputs = (func, value = null, id = null) => {
+    let inputs = [...this.state.inputs];
+    for (let input of inputs) {
+      if (id && input.id === id) {
+        func(input, value);
+        this.setState({ inputs: inputs });
+        return true;
+      } else if (!id) func(input, value);
     }
-    setInputs(inputGroups);
+    this.setState({ inputs: inputs });
     return true;
-  }
+  };
 
   validateRequired(input, inputValue) {
     if (input.required) {
@@ -120,29 +115,29 @@ export default class Info extends React.Component {
       !this.validatePattern(input, inputValue) ||
       !this.validateRequired(input, inputValue)
     ) {
-      return this.props.toggle(input.id, false);
+      return this.toggleValidity(input.id, false);
     }
-    return this.props.toggle(input.id, true);
+    return this.toggleValidity(input.id, true);
   };
 
   updateValues() {
-    this.props.loop((input) => {
+    this.loopThroughInputs((input) => {
       input.value = input.inputValue;
     });
   }
 
   submitButtonHandling = (e) => {
     e.preventDefault();
-    this.props.inputs.forEach((input) => {
+    this.state.inputs.forEach((input) => {
       this.validate(input, input.inputValue);
     });
-    if (!this.props.allInputsValid)
+    if (!this.allInputsValid)
       throw new Error("One or more input fields are invalid!");
     this.updateValues();
     this.setState({ editing: false });
     setTimeout(() => {
-      if (!this.props.allInputsValid) this.setState({ editing: true });
-    }, 1000);
+      if (!this.allInputsValid()) this.setState({ editing: true });
+    }, 5);
   };
 
   editButtonHandling = (e) => {
@@ -156,7 +151,7 @@ export default class Info extends React.Component {
         {this.getInputHTML()}
 
         <EditButton
-          beingEdited={this.props.allInputsValid ? this.state.editing : true}
+          beingEdited={this.allInputsValid() ? this.state.editing : true}
           editFunc={this.editButtonHandling}
           submitFunc={this.submitButtonHandling}
         />
