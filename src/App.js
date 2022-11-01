@@ -5,6 +5,14 @@ import Info from "./components/Info";
 import NewInfoButton from "./components/NewInfoButton";
 
 function App() {
+  let [generalInfos, setGeneralInfos] = useState([
+    {
+      inputs: getInputs("general"),
+      class: "generalInfo",
+      key: uniqid(),
+      deletable: true,
+    },
+  ]);
   let [educationInfos, setEducationInfos] = useState([
     {
       inputs: getInputs("education"),
@@ -169,7 +177,7 @@ function App() {
 
   return (
     <div className="App">
-      <Info inputs={getInputs("general")} class="generalInfo" key={uniqid()} />
+      {mapInfos(generalInfos)}
       <main>
         <div className="infoWrapper">
           <h2>Experience</h2>
