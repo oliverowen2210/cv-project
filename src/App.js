@@ -10,7 +10,6 @@ function App() {
       inputs: getInputs("general"),
       class: "generalInfo",
       key: uniqid(),
-      deletable: true,
     },
   ]);
   let [educationInfos, setEducationInfos] = useState([
