@@ -175,8 +175,8 @@ input:focus {
   font-size: 2rem;
   align-self: flex-end;
   position: absolute;
-  right: 34%;
-  top: 9%;
+  right: 19vw;
+  top: 3vh;
 }
 
 .editButton,
