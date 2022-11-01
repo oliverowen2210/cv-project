@@ -2,6 +2,7 @@ import React from "react";
 
 import TextField from "./TextField";
 import EditButton from "./EditButton";
+import DeleteButton from "./DeleteButton";
 import EditableLabel from "./EditableLabel";
 export default class Info extends React.Component {
   constructor(props) {
@@ -74,7 +75,7 @@ export default class Info extends React.Component {
     let inputs = [...this.state.inputs];
     for (let input of inputs) {
       if (id && input.id === id) {
-        func(input, value);
+        func(input, value, inputs);
         this.setState({ inputs: inputs });
         return true;
       } else if (!id) func(input, value);
@@ -126,6 +127,11 @@ export default class Info extends React.Component {
     });
   }
 
+  deleteButtonHandling = (e) => {
+    e.preventDefault();
+    this.props.deleteFunc();
+  };
+
   submitButtonHandling = (e) => {
     e.preventDefault();
     this.state.inputs.forEach((input) => {
@@ -149,12 +155,14 @@ export default class Info extends React.Component {
     return (
       <div className={this.props.class}>
         {this.getInputHTML()}
-
         <EditButton
           beingEdited={this.allInputsValid() ? this.state.editing : true}
           editFunc={this.editButtonHandling}
           submitFunc={this.submitButtonHandling}
         />
+        {this.props.deletable ? (
+          <DeleteButton deleteFunc={this.deleteButtonHandling} />
+        ) : null}
       </div>
     );
   }
