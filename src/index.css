@@ -34,7 +34,8 @@ main {
   content: "This field is required.";
   font-weight: bold;
   position: absolute;
-  right: 0%;
+  width: fit-content;
+  margin: 0 auto;
   border: 2px solid black;
   width: fit-content;
   border-radius: 1em;
@@ -45,12 +46,24 @@ main {
 }
 
 .generalInfo .required:hover::before {
-  top: -5%;
-  left: 30%;
+  top: -1vh;
+}
+
+.workInfo .required:hover::before {
+  left: -65%;
+}
+
+.workDatesInput .required:hover::before {
+  right: -30%;
+  top: 0;
 }
 
 .educationInfo .required:hover::before {
-  left: -65%;
+  right: 30%;
+}
+
+.gradDateInput .required:hover::before {
+  top: -2.5vh;
 }
 
 .required::after {
