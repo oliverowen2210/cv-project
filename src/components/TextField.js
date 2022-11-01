@@ -9,21 +9,36 @@ export default class InputField extends React.Component {
   render() {
     let returnedElement = null;
     const input = this.props.input;
-    if (this.props.beingEdited)
-      returnedElement = (
-        <input
-          value={input.inputValue}
-          id={input.id}
-          className={!input.valid ? `${input.name} invalid` : input.name}
-          onChange={(e) => {
-            this.props.update(input.id, e.target.value);
-          }}
-          onBlur={(e) => {
-            this.props.validate(input, e.target.value);
-          }}
-        />
-      );
-    else
+    if (this.props.beingEdited) {
+      if (this.props.input.textarea) {
+        returnedElement = (
+          <textarea
+            value={input.inputValue}
+            id={input.id}
+            className={!input.valid ? `${input.name} invalid` : input.name}
+            onChange={(e) => {
+              this.props.update(input.id, e.target.value);
+            }}
+            onBlur={(e) => {
+              this.props.validate(input, e.target.value);
+            }}
+          />
+        );
+      } else
+        returnedElement = (
+          <input
+            value={input.inputValue}
+            id={input.id}
+            className={!input.valid ? `${input.name} invalid` : input.name}
+            onChange={(e) => {
+              this.props.update(input.id, e.target.value);
+            }}
+            onBlur={(e) => {
+              this.props.validate(input, e.target.value);
+            }}
+          />
+        );
+    } else
       returnedElement = (
         <span className={!input.valid ? `${input.name} invalid` : input.name}>
           {input.value}
