@@ -1,6 +1,6 @@
 body {
   margin: 0;
-  font-family: "Roboto", sans-serif;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
   font-size: 28px;
 }
 
@@ -26,48 +26,8 @@ main {
   width: 98%;
   height: 25%;
   justify-self: center;
-  background-color: rgb(2, 185, 247);
+  background-color: rgb(100, 133, 182);
   color: white;
-}
-
-.required:hover::before {
-  content: "This field is required.";
-  font-weight: bold;
-  position: absolute;
-  width: fit-content;
-  margin: 0 auto;
-  border: 2px solid black;
-  width: fit-content;
-  border-radius: 1em;
-  padding: 1%;
-  background: white;
-  color: black;
-  font-size: 0.6em;
-}
-
-.generalInfo .required:hover::before {
-  top: -1vh;
-}
-
-.workInfo .required:hover::before {
-  left: -65%;
-}
-
-.workDatesInput .required:hover::before {
-  right: -30%;
-  top: 0;
-}
-
-.educationInfo .required:hover::before {
-  right: 30%;
-}
-
-.gradDateInput .required:hover::before {
-  top: -2.5vh;
-}
-
-.required::after {
-  content: "*";
 }
 
 .nameInput {
@@ -90,6 +50,29 @@ main {
   font-size: 1.4rem;
 }
 
+.infoLabel {
+  font-size: 1.6rem;
+  font-weight: bold;
+}
+
+.textField.edit {
+  font-size: 1.2rem;
+  color: rgb(37, 37, 37);
+  padding: 1.5% 3%;
+  border: 2px solid black;
+  border-radius: 0.6rem;
+  max-width: 80%;
+  width: 100%;
+}
+
+textarea.textField.edit {
+  max-height: 30vh;
+  max-width: 87%;
+  font-size: 1.2rem;
+  border: 2px solid black;
+  border-radius: 0.6rem;
+}
+
 .generalInfo input {
   width: 90%;
   padding: 1%;
@@ -104,18 +87,11 @@ main {
   position: relative;
 }
 
-input {
-  border: 2px solid black;
-  border-radius: 0.6rem;
-  max-width: 80%;
-  width: 100%;
-}
-
 input:focus {
   outline: 2px solid black;
 }
 
-input.invalid {
+.textField.edit.invalid {
   border: 2px solid red;
 }
 
@@ -146,6 +122,19 @@ input:focus {
   width: 50%;
 }
 
+.infoHeader {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+}
+
+.infoHeader h2 {
+  grid-column: 2;
+}
+
+.infoHeader button {
+  grid-column: 3;
+}
+
 .infoWrapper h2 {
   margin: 3% 0;
   font-size: 1.8rem;
@@ -154,7 +143,6 @@ input:focus {
 .educationInfo,
 .workInfo {
   border-bottom: 1px solid black;
-  border-radius: 0.3em;
   display: grid;
   margin-bottom: 2%;
   padding-bottom: 2%;
@@ -174,7 +162,6 @@ input:focus {
   cursor: pointer;
   font-size: 2rem;
   align-self: flex-end;
-  position: absolute;
   right: 19vw;
   top: 3vh;
 }
@@ -273,12 +260,4 @@ span {
 
 span.jobDesc {
   font-size: 1.2rem;
-}
-
-.jobDescInput textarea {
-  max-height: 30vh;
-  max-width: 90%;
-  font-size: 1.2rem;
-  border: 2px solid black;
-  border-radius: 0.6rem;
 }
