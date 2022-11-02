@@ -9,12 +9,14 @@ export default class EditableLabel extends React.Component {
     return this.props.beingEdited ? (
       <label
         htmlFor={this.props.htmlFor}
-        className={this.props.required ? `required` : null}
+        className={
+          this.props.required ? `required infoLabel edit` : "infoLabel edit"
+        }
       >
         {this.props.edit}
       </label>
     ) : (
-      <span>{this.props.noEdit}</span>
+      <span className="infoLabel noEdit">{this.props.noEdit}</span>
     );
   }
 }

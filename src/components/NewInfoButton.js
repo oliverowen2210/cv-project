@@ -9,14 +9,17 @@ export default class NewInfoButton extends React.Component {
 
   handleClick(e) {
     e.preventDefault();
+    if (this.props.editing) return false;
     let newInfo = {
       inputs: this.props.infoInputs,
       class: this.props.infoClass,
       key: uniqid(),
       deleteFunc: this.props.infoDeleteFunc(this.key),
       deletable: this.props.infoDeletable,
+      editing: true,
     };
-    this.props.setFunc(this.props.infoArray.concat(newInfo));
+    let newArray = this.props.infoArray.concat(newInfo);
+    this.props.setFunc(this.props.infoType, newArray);
   }
 
   render() {

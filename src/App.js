@@ -5,55 +5,69 @@ import Info from "./components/Info";
 import NewInfoButton from "./components/NewInfoButton";
 
 function App() {
-  let [generalInfos, setGeneralInfos] = useState([
-    {
-      inputs: getInputs("general"),
-      class: "generalInfo",
-      key: uniqid(),
-    },
-  ]);
-  let [educationInfos, setEducationInfos] = useState([
-    {
-      inputs: getInputs("education"),
-      class: "educationInfo",
-      key: uniqid(),
-      deletable: true,
-    },
-  ]);
-  let [workInfos, setWorkInfos] = useState([
-    {
-      inputs: getInputs("work"),
-      class: "workInfo",
-      key: uniqid(),
-      deletable: true,
-    },
-  ]);
+  let [infoGroups, setInfoGroups] = useState({
+    general: [
+      {
+        inputs: getInputs("general"),
+        class: "generalInfo",
+        key: uniqid(),
+        editing: true,
+      },
+    ],
+    education: [],
+    work: [],
+  });
 
-  let infos = [educationInfos, workInfos];
+  let updateInfoArray = (infoType, updatedArray) => {
+    let clonedInfos = { ...infoGroups };
+    clonedInfos[infoType] = updatedArray;
+    setInfoGroups(clonedInfos);
+  };
 
-  function mapInfos(infoGroup) {
-    return infoGroup.map((info) => {
+  function mapInfos(array) {
+    return array.map((info) => {
       return (
         <Info
           inputs={info.inputs}
           class={info.class}
+          id={info.key}
           key={info.key}
           deleteFunc={() => {
             deleteInfo(info.key);
           }}
           deletable={info.deletable}
+          editing={info.editing}
+          updateStateFunc={updateEditingState}
+          group={array}
         />
       );
     });
   }
 
   function deleteInfo(key) {
-    for (let infoGroup of infos) {
-      for (let info of infoGroup) {
+    for (let infoGroup in infoGroups) {
+      for (let info of infoGroups[infoGroup]) {
         if (info.key === key) {
-          infoGroup.splice(infoGroup.indexOf(info), 1);
-          setEducationInfos([...educationInfos]);
+          infoGroups[infoGroup].splice(infoGroups[infoGroup].indexOf(info), 1);
+          setInfoGroups({ ...infoGroups });
         }
+      }
+    }
+  }
+
+  function groupBeingEdited(group) {
+    for (let info of group) {
+      if (info.editing === true) return true;
+    }
+    return false;
+  }
+
+  function updateEditingState(group, key, newState) {
+    if (newState === true && groupBeingEdited(group)) return false;
+    for (let info of group) {
+      if (info.key === key) {
+        info.editing = newState;
+        setInfoGroups({ ...infoGroups });
       }
     }
   }
@@ -68,7 +82,6 @@ function App() {
           id: uniqid(),
           edit: "Name",
           valid: true,
-          required: true,
         },
         {
           name: "address",
@@ -76,9 +89,8 @@ function App() {
           inputValue: "",
           id: uniqid(),
           edit: "Address",
-          noEdit: "🏠",
+          noEdit: "Address",
           valid: true,
-          required: true,
         },
         {
           name: "email",
@@ -86,9 +98,8 @@ function App() {
           inputValue: "",
           id: uniqid(),
           edit: "Email",
-          noEdit: "📧",
+          noEdit: "Email",
           valid: true,
-          required: true,
         },
         {
           name: "phone",
@@ -96,9 +107,8 @@ function App() {
           inputValue: "",
           id: uniqid(),
           edit: "Phone Number",
-          noEdit: "📞",
+          noEdit: "Phone Number",
           valid: true,
-          required: true,
           pattern: "^[\\d*#+]+$",
         },
       ];
@@ -111,7 +121,6 @@ function App() {
           id: uniqid(),
           edit: "Degree",
           valid: true,
-          required: true,
         },
         {
           name: "school",
@@ -120,16 +129,15 @@ function App() {
           id: uniqid(),
           edit: "School",
           valid: true,
-          required: true,
         },
         {
           name: "gradDate",
           value: "",
           inputValue: "",
           id: uniqid(),
-          edit: "Graduation Date/Range",
+          edit: "Graduation Date",
           valid: true,
-          required: true,
+          type: "date",
         },
       ];
     } else if (type === "work")
@@ -141,7 +149,6 @@ function App() {
           id: uniqid(),
           edit: "Position Title",
           valid: true,
-          required: true,
         },
         {
           name: "companyName",
@@ -150,61 +157,76 @@ function App() {
           id: uniqid(),
           edit: "Company",
           valid: true,
-          required: true,
         },
         {
-          name: "workDates",
+          name: "workedFrom",
           value: "",
           inputValue: "",
           id: uniqid(),
-          edit: "Employment Dates",
+          edit: "Employed From",
           valid: true,
-          required: true,
+          type: "date",
+        },
+        {
+          name: "workedTo",
+          value: "",
+          inputValue: "",
+          id: uniqid(),
+          edit: "Employed To",
+          valid: true,
+          type: "date",
         },
         {
           name: "jobDesc",
           value: "",
           inputValue: "",
           id: uniqid(),
-          edit: "Job description",
+          edit: "Job Description",
           valid: true,
-          required: false,
-          textarea: true,
+          type: "textarea",
         },
       ];
   }
 
   return (
     <div className="App">
-      {mapInfos(generalInfos)}
+      {mapInfos(infoGroups.general)}
       <main>
         <div className="infoWrapper">
-          <h2>Experience</h2>
-          <NewInfoButton
-            infoArray={workInfos}
-            setFunc={setWorkInfos}
-            infoInputs={getInputs("work")}
-            infoClass="workInfo"
-            className="newInfoButton"
-            infoDeleteFunc={deleteInfo}
-            infoDeletable={true}
-            limit={3}
-          />
-          <div className="infoGroup">{mapInfos(workInfos)}</div>
+          <div className="infoHeader">
+            <h2>Experience</h2>
+            <NewInfoButton
+              infoArray={infoGroups.work}
+              infoInputs={getInputs("work")}
+              infoClass="workInfo"
+              className="newInfoButton"
+              infoDeleteFunc={deleteInfo}
+              infoDeletable={true}
+              limit={3}
+              infoType={"work"}
+              setFunc={updateInfoArray}
+              editing={groupBeingEdited(infoGroups.work)}
+            />
+          </div>
+          <div className="infoGroup">{mapInfos(infoGroups.work)}</div>
         </div>
         <div className="infoWrapper">
-          <h2>Education</h2>
-          <NewInfoButton
-            infoArray={educationInfos}
-            setFunc={setEducationInfos}
-            infoInputs={getInputs("education")}
-            infoClass="educationInfo"
-            className="newInfoButton"
-            infoDeleteFunc={deleteInfo}
-            infoDeletable={true}
-            limit={2}
-          />
-          <div className="infoGroup">{mapInfos(educationInfos)}</div>
+          <div className="infoHeader">
+            <h2>Education</h2>
+            <NewInfoButton
+              infoArray={infoGroups.education}
+              infoInputs={getInputs("education")}
+              infoClass="educationInfo"
+              className="newInfoButton"
+              infoDeleteFunc={deleteInfo}
+              infoDeletable={true}
+              limit={2}
+              infoType={"education"}
+              setFunc={updateInfoArray}
+              editing={groupBeingEdited(infoGroups.education)}
+            />
+          </div>
+          <div className="infoGroup">{mapInfos(infoGroups.education)}</div>
         </div>
       </main>
     </div>
