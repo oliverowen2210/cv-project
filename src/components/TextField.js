@@ -48,7 +48,11 @@ export default class InputField extends React.Component {
               this.setState({ required: true });
               this.props.validate(input, e.target.value);
             }}
-            type={this.props.input.type}
+            type={
+              this.props.input.type === "startDate"
+                ? "date"
+                : this.props.input.type
+            }
           />
         );
     } else
@@ -60,7 +64,8 @@ export default class InputField extends React.Component {
               : `${input.name} textField noEdit`
           }
         >
-          {input.value}
+          {input.type === "startDate" ? `${input.value} -` : input.value}
+          {}
         </span>
       );
     return returnedElement;
