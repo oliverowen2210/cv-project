@@ -165,7 +165,7 @@ function App() {
           id: uniqid(),
           edit: "Employed From",
           valid: true,
-          type: "date",
+          type: "startDate",
         },
         {
           name: "workedTo",
