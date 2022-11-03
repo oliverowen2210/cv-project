@@ -1,7 +1,7 @@
 import React from "react";
 
 import TextField from "./TextField";
-import EditButton from "./EditButton";
+import ToggleButton from "./ToggleButton";
 import DeleteButton from "./DeleteButton";
 import EditableLabel from "./EditableLabel";
 export default class Info extends React.Component {
@@ -87,7 +87,7 @@ export default class Info extends React.Component {
     return true;
   };
 
-  validateRequired(input, inputValue) {
+  validateRequired(inputValue) {
     if (!inputValue) {
       return false;
     }
@@ -115,7 +115,7 @@ export default class Info extends React.Component {
     if (
       !this.validateLength(input, inputValue) ||
       !this.validatePattern(input, inputValue) ||
-      !this.validateRequired(input, inputValue)
+      !this.validateRequired(inputValue)
     ) {
       return this.toggleValidity(input.id, false);
     }
@@ -156,12 +156,18 @@ export default class Info extends React.Component {
     return (
       <form className={this.props.class}>
         {this.getInputHTML()}
-        <EditButton
-          beingEdited={this.allInputsValid() ? this.props.editing : true}
-          editFunc={this.editButtonHandling}
-          submitFunc={this.submitButtonHandling}
-        />
-        {this.props.deletable ? (
+        {!this.props.noButtons ? (
+          <ToggleButton
+            toggled={this.allInputsValid() ? this.props.editing : true}
+            untoggledFunc={this.editButtonHandling}
+            toggledFunc={this.submitButtonHandling}
+            untoggledText="✎"
+            toggledText="✓"
+            untoggledClassName="editButton"
+            toggledClassName="submitButton"
+          />
+        ) : null}
+        {this.props.deletable && !this.props.noButtons ? (
           <DeleteButton deleteFunc={this.deleteButtonHandling} />
         ) : null}
       </form>

@@ -26,7 +26,7 @@ export default class NewInfoButton extends React.Component {
     if (this.props.infoArray.length <= this.props.limit)
       return (
         <button
-          className={this.props.className}
+          className="newInfoButton"
           onClick={(e) => {
             this.handleClick(e);
           }}
