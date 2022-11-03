@@ -111,49 +111,23 @@ function App() {
       ];
     } else if (type === "work") {
       return [
-        {
-          name: "workTitle",
-          value: "",
-          inputValue: "",
-          id: uniqid(),
-          edit: "Position Title",
-          valid: true,
-        },
-        {
-          name: "companyName",
-          value: "",
-          inputValue: "",
-          id: uniqid(),
-          edit: "Company",
-          valid: true,
-        },
-        {
+        createInput({ name: "workTitle", editText: "Position Title" }),
+        createInput({ name: "companyName", editText: "Company" }),
+        createInput({
           name: "workedFrom",
-          value: "",
-          inputValue: "",
-          id: uniqid(),
-          edit: "Employed From",
-          valid: true,
+          editText: "Employed From",
           type: "startDate",
-        },
-        {
+        }),
+        createInput({
           name: "workedTo",
-          value: "",
-          inputValue: "",
-          id: uniqid(),
-          edit: "Employed To",
-          valid: true,
+          editText: "Employed To",
           type: "date",
-        },
-        {
+        }),
+        createInput({
           name: "jobDesc",
-          value: "",
-          inputValue: "",
-          id: uniqid(),
-          edit: "Job Description",
-          valid: true,
+          editText: "Job Description",
           type: "textarea",
-        },
+        }),
       ];
     } else if (type === "skills") {
       return [createInput({ name: "skill", editText: "Skill" })];
