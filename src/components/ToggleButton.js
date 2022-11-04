@@ -1,35 +1,27 @@
 import React from "react";
 
-export default class ToggleButton extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-  render() {
-    return this.props.toggled ? (
-      <button
-        className={this.props.toggledClassName}
-        onClick={(e) => {
-          this.props.toggledFunc(e);
-        }}
-      >
-        {this.props.toggledText}
-      </button>
-    ) : (
-      <button
-        className={
-          this.props.untoggledClassName
-            ? this.props.untoggledClassName
-            : this.props.toggledClassName
-        }
-        onClick={(e) => {
-          this.props.untoggledFunc
-            ? this.props.untoggledFunc(e)
-            : this.props.toggledFunc(e);
-        }}
-      >
-        {this.props.untoggledText}
-      </button>
-    );
-  }
+export default function ToggleButton(props) {
+  return props.toggled ? (
+    <button
+      className={props.toggledClassName}
+      onClick={(e) => {
+        props.toggledFunc(e);
+      }}
+    >
+      {props.toggledText}
+    </button>
+  ) : (
+    <button
+      className={
+        props.untoggledClassName
+          ? props.untoggledClassName
+          : props.toggledClassName
+      }
+      onClick={(e) => {
+        props.untoggledFunc ? props.untoggledFunc(e) : props.toggledFunc(e);
+      }}
+    >
+      {props.untoggledText}
+    </button>
+  );
 }

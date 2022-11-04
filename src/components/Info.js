@@ -1,24 +1,18 @@
-import React from "react";
-
+import { useState } from "react";
 import TextField from "./TextField";
 import ToggleButton from "./ToggleButton";
 import DeleteButton from "./DeleteButton";
 import EditableLabel from "./EditableLabel";
-export default class Info extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      editing: this.props.editing,
-      inputs: this.props.inputs,
-    };
-    this.updateStateFunc = (state) => {
-      this.props.updateStateFunc(this.props.group, this.props.id, state);
-    };
-  }
+export default function Info(props) {
+  let updateStateFunc = (state) => {
+    props.updateStateFunc(props.group, props.id, state);
+  };
 
-  getInputHTML() {
-    return this.state.inputs.map((input) => {
-      if (!input.value && !this.props.editing) return null;
+  let [inputs, setInputs] = useState(props.initialInputs);
+
+  let getInputHTML = () => {
+    return inputs.map((input) => {
+      if (!input.value && !props.editing) return null;
       else
         return (
           <div
@@ -29,7 +23,7 @@ export default class Info extends React.Component {
               //* this is because useState is async, so checking for
               /* validity status after submitting doesn't work. will revisit once
         i learn how to use hooks*/
-              beingEdited={this.allInputsValid() ? this.props.editing : true}
+              beingEdited={allInputsValid() ? props.editing : true}
               htmlFor={input.id}
               edit={input.edit}
               noEdit={input.noEdit}
@@ -38,18 +32,18 @@ export default class Info extends React.Component {
             />
             <TextField
               input={input}
-              beingEdited={this.allInputsValid() ? this.props.editing : true}
-              update={this.updateInputValue}
-              validate={this.validate}
+              beingEdited={allInputsValid() ? props.editing : true}
+              update={updateInputValue}
+              validate={validate}
               key={`${input.id} field`}
             ></TextField>
           </div>
         );
     });
-  }
+  };
 
-  updateInputValue = (id, newValue) => {
-    this.loopThroughInputs(
+  let updateInputValue = (id, newValue) => {
+    loopThroughInputs(
       (input, newVal) => {
         input.inputValue = newVal;
       },
@@ -58,8 +52,8 @@ export default class Info extends React.Component {
     );
   };
 
-  toggleValidity = (id, newValue) => {
-    this.loopThroughInputs(
+  let toggleValidity = (id, newValue) => {
+    loopThroughInputs(
       (input, newVal) => {
         input.valid = newVal;
       },
@@ -68,109 +62,105 @@ export default class Info extends React.Component {
     );
   };
 
-  allInputsValid = () => {
-    return !this.state.inputs.some((input) => {
+  let allInputsValid = () => {
+    return !inputs.some((input) => {
       return input.valid === false;
     });
   };
 
-  loopThroughInputs = (func, value = null, id = null) => {
-    let inputs = [...this.state.inputs];
-    for (let input of inputs) {
+  let loopThroughInputs = (func, value = null, id = null) => {
+    let clonedInputs = [...inputs];
+    for (let input of clonedInputs) {
       if (id && input.id === id) {
         func(input, value, inputs);
-        this.setState({ inputs: inputs });
+        setInputs(clonedInputs);
         return true;
       } else if (!id) func(input, value);
     }
-    this.setState({ inputs: inputs });
     return true;
   };
 
-  validateRequired(inputValue) {
+  let validateRequired = (inputValue) => {
     if (!inputValue) {
       return false;
     }
     return true;
-  }
+  };
 
-  validateLength(input, inputValue) {
+  let validateLength = (input, inputValue) => {
     if (input.minLength && inputValue.length < input.minLength) {
       return false;
     } else if (input.maxLength && inputValue.length > input.maxLength) {
       return false;
     }
     return true;
-  }
+  };
 
-  validatePattern(input, inputValue) {
+  let validatePattern = (input, inputValue) => {
     if (input.pattern) {
       const pattern = new RegExp(input.pattern);
       return pattern.test(inputValue);
     }
     return true;
-  }
-
-  validate = (input, inputValue) => {
-    if (
-      !this.validateLength(input, inputValue) ||
-      !this.validatePattern(input, inputValue) ||
-      !this.validateRequired(inputValue)
-    ) {
-      return this.toggleValidity(input.id, false);
-    }
-    return this.toggleValidity(input.id, true);
   };
 
-  updateValues() {
-    this.loopThroughInputs((input) => {
+  let validate = (input, inputValue) => {
+    if (
+      !validateLength(input, inputValue) ||
+      !validatePattern(input, inputValue) ||
+      !validateRequired(inputValue)
+    ) {
+      return toggleValidity(input.id, false);
+    }
+    return toggleValidity(input.id, true);
+  };
+
+  let updateValues = () => {
+    loopThroughInputs((input) => {
       input.value = input.inputValue;
     });
-  }
-
-  deleteButtonHandling = (e) => {
-    e.preventDefault();
-    this.props.deleteFunc();
   };
 
-  submitButtonHandling = (e) => {
+  let deleteButtonHandling = (e) => {
     e.preventDefault();
-    this.state.inputs.forEach((input) => {
-      this.validate(input, input.inputValue);
+    props.deleteFunc();
+  };
+
+  let submitButtonHandling = (e) => {
+    e.preventDefault();
+    inputs.forEach((input) => {
+      validate(input, input.inputValue);
     });
-    if (!this.allInputsValid)
+    if (!allInputsValid)
       throw new Error("One or more input fields are invalid!");
-    this.updateValues();
-    this.updateStateFunc(false);
+    updateValues();
+    updateStateFunc(false);
     setTimeout(() => {
-      if (!this.allInputsValid()) this.updateStateFunc(true);
+      if (!allInputsValid()) updateStateFunc(true);
     }, 5);
   };
 
-  editButtonHandling = (e) => {
+  let editButtonHandling = (e) => {
     e.preventDefault();
-    this.updateStateFunc(true);
+    updateStateFunc(true);
   };
-
-  render() {
-    return (
-      <form className={this.props.class}>
-        {this.getInputHTML()}
-        {!this.props.noButtons ? (
-          <ToggleButton
-            toggled={this.allInputsValid() ? this.props.editing : true}
-            untoggledFunc={this.editButtonHandling}
-            toggledFunc={this.submitButtonHandling}
-            untoggledText="✎"
-            toggledText="✓"
-            untoggledClassName="editButton"
-            toggledClassName="submitButton"
-          />
-        ) : null}
-        {this.props.deletable && !this.props.noButtons ? (
-          <DeleteButton deleteFunc={this.deleteButtonHandling} />
-        ) : null}
-      </form>
-    );
-  }
+  return (
+    <form className={props.class}>
+      {getInputHTML()}
+      {!props.noButtons ? (
+        <ToggleButton
+          toggled={allInputsValid() ? props.editing : true}
+          untoggledFunc={editButtonHandling}
+          toggledFunc={submitButtonHandling}
+          untoggledText="✎"
+          toggledText="✓"
+          untoggledClassName="editButton"
+          toggledClassName="submitButton"
+        />
+      ) : null}
+      {props.deletable && !props.noButtons ? (
+        <DeleteButton deleteFunc={deleteButtonHandling} />
+      ) : null}
+    </form>
+  );
 }

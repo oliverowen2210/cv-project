@@ -32,7 +32,7 @@ function App() {
     return array.map((info) => {
       return (
         <Info
-          inputs={info.inputs}
+          initialInputs={info.inputs}
           class={info.class}
           id={info.key}
           key={info.key}

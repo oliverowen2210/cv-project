@@ -1,38 +1,31 @@
-import React from "react";
 import uniqid from "uniqid";
 
-export default class NewInfoButton extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
-  handleClick(e) {
+export default function NewInfoButton(props) {
+  let handleClick = (e) => {
     e.preventDefault();
-    if (this.props.editing) return false;
+    if (props.editing) return false;
+    let newInfoKey = uniqid();
     let newInfo = {
-      inputs: this.props.infoInputs,
-      class: this.props.infoClass,
-      key: uniqid(),
-      deleteFunc: this.props.infoDeleteFunc(this.key),
-      deletable: this.props.infoDeletable,
+      inputs: props.infoInputs,
+      class: props.infoClass,
+      key: newInfoKey,
+      deleteFunc: props.infoDeleteFunc(newInfoKey),
+      deletable: props.infoDeletable,
       editing: true,
     };
-    let newArray = this.props.infoArray.concat(newInfo);
-    this.props.setFunc(this.props.infoType, newArray);
-  }
+    let newArray = props.infoArray.concat(newInfo);
+    props.setFunc(props.infoType, newArray);
+  };
 
-  render() {
-    if (this.props.infoArray.length <= this.props.limit)
-      return (
-        <button
-          className="newInfoButton"
-          onClick={(e) => {
-            this.handleClick(e);
-          }}
-        >
-          +
-        </button>
-      );
-  }
+  if (props.infoArray.length <= props.limit)
+    return (
+      <button
+        className="newInfoButton"
+        onClick={(e) => {
+          handleClick(e);
+        }}
+      >
+        +
+      </button>
+    );
 }

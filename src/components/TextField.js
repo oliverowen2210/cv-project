@@ -1,73 +1,62 @@
-import React from "react";
+import { useState } from "react";
 
-export default class InputField extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      required: false,
-    };
-  }
+export default function TextField(props) {
+  let [required, setRequired] = useState(false);
 
-  render() {
-    let returnedElement = null;
-    const input = this.props.input;
-    if (this.props.beingEdited) {
-      if (this.props.input.type === "textarea") {
-        returnedElement = (
-          <textarea
-            value={input.inputValue}
-            id={input.id}
-            className={
-              !input.valid
-                ? `${input.name} textField invalid edit`
-                : `${input.name} textField edit`
-            }
-            onChange={(e) => {
-              this.props.update(input.id, e.target.value);
-            }}
-            onBlur={(e) => {
-              this.props.validate(input, e.target.value);
-            }}
-          />
-        );
-      } else
-        returnedElement = (
-          <input
-            value={input.inputValue}
-            id={input.id}
-            required={this.state.required}
-            className={
-              !input.valid
-                ? `${input.name} textField invalid edit`
-                : `${input.name} textField edit`
-            }
-            onChange={(e) => {
-              this.props.update(input.id, e.target.value);
-            }}
-            onBlur={(e) => {
-              this.setState({ required: true });
-              this.props.validate(input, e.target.value);
-            }}
-            type={
-              this.props.input.type === "startDate"
-                ? "date"
-                : this.props.input.type
-            }
-          />
-        );
-    } else
+  let returnedElement = null;
+  const input = props.input;
+  if (props.beingEdited) {
+    if (props.input.type === "textarea") {
       returnedElement = (
-        <span
+        <textarea
+          value={input.inputValue}
+          id={input.id}
           className={
             !input.valid
-              ? `${input.name} textField invalid noEdit`
-              : `${input.name} textField noEdit`
+              ? `${input.name} textField invalid edit`
+              : `${input.name} textField edit`
           }
-        >
-          {input.type === "startDate" ? `${input.value} -` : input.value}
-          {}
-        </span>
+          onChange={(e) => {
+            props.update(input.id, e.target.value);
+          }}
+          onBlur={(e) => {
+            props.validate(input, e.target.value);
+          }}
+        />
       );
-    return returnedElement;
-  }
+    } else
+      returnedElement = (
+        <input
+          value={input.inputValue}
+          id={input.id}
+          required={required}
+          className={
+            !input.valid
+              ? `${input.name} textField invalid edit`
+              : `${input.name} textField edit`
+          }
+          onChange={(e) => {
+            props.update(input.id, e.target.value);
+          }}
+          onBlur={(e) => {
+            setRequired(true);
+            props.validate(input, e.target.value);
+          }}
+          type={props.input.type === "startDate" ? "date" : props.input.type}
+        />
+      );
+  } else
+    returnedElement = (
+      <span
+        className={
+          !input.valid
+            ? `${input.name} textField invalid noEdit`
+            : `${input.name} textField noEdit`
+        }
+      >
+        {input.type === "startDate" ? `${input.value} -` : input.value}
+        {}
+      </span>
+    );
+  return returnedElement;
 }
